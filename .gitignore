@@ -1,9 +1,11 @@
-
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
 
 application/data/*
+
+application/config/email.php
+application/config/database.php
 
 application/logs/*
 !application/logs/index.html
