@@ -124,4 +124,54 @@ class User_model extends CI_Model {
 	    $this->db->where('email', $email);
 	    return $this->db->update('user', $data);
 	}
+
+	public function addUserLogin($user, $username, $token, $ip, $platform, $browser, $version, $robot, $mobile = NULL)
+	{
+		$date = time();
+		
+	    $data = array(
+	        'user' => $user,
+	        'username' => $username,
+	        'token' => $token,
+	        'ip' => $ip,
+	        'platform' => $platform,
+	        'browser' => $browser,
+	        'version' => $version,
+	        'robot' => $robot,
+	        'mobile' => $mobile,
+	        'status' => 1,
+	        'create_time' => $date,
+	        'change_time' => $date,
+	    );
+
+	    return $this->db->insert('login', $data);
+	}
+
+	public function getLoginByToken($token)
+	{
+		$query = $this->db->get_where('login', array('token' => $token, 'status' => 1));
+	    return $query->row();
+	}
+
+	public function getLoginByTokenAndUser($username, $token)
+	{
+		$query = $this->db->get_where('login', array('username' => $username, 'token' => $token, 'status' => 1));
+	    return $query->row();
+	}
+
+	public function getLoginsByCondition($condition = array(), $limit = NULL, $offset = NULL)
+	{
+	    $query = $this->db->get_where('login', $condition, $limit, $offset);
+    	return $query->result();
+	}
+
+	public function updateUserLoginByToken($token, $data = array())
+	{
+		$date = time();
+
+		$data['change_time'] = $date;
+
+	    $this->db->where('token', $token);
+	    return $this->db->update('login', $data);
+	}
 }

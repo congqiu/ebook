@@ -4,6 +4,7 @@ application/cache/*
 
 application/data/*
 
+application/config/config.php
 application/config/email.php
 application/config/database.php
 

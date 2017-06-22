@@ -28,6 +28,22 @@ $route['register'] = 'home/register';
 $route['register/confirm/(:any)'] = 'home/registerConfirm/$1';
 
 
+
+$route['api/category/(:any)'] = 'api/category/$1';
+$route['api/book'] = 'api/book';
+$route['api/search'] = 'api/search';
+$route['api/bookpage'] = 'api/page';
+$route['api/bookcase'] = 'api/bookcase';
+$route['api/category/(:any)/(:any)'] = 'api/category/$1/$2';
+$route['api/booktype'] = 'api/booktype';
+
+$route['api/user'] = 'api/user';
+
+$route['api/add/bookmark'] = 'api/ajaxAddBookmark';
+$route['api/add/bookcase'] = 'api/ajaxAddToBookcase';
+$route['api/remove/bookcase'] = 'api/ajaxRemoveBookcase';
+
+
 /*
 ajax
  */
