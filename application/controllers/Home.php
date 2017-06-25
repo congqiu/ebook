@@ -87,7 +87,12 @@ class Home extends MY_Controller {
 
     public function logout() {
         $this->session->unset_userdata('username');
-        delete_cookie('userInfo');
+        $login = $this->user_model->getLoginByTokenAndUser(get_cookie('user'), get_cookie('token'));
+        if ($login) {
+            $this->user_model->updateUserLoginByToken(get_cookie('token'), array('status' => 0));
+        }
+        delete_cookie('user');
+        delete_cookie('token');
         header('Location: /', TRUE ,307);
         return;
     }
