@@ -33,11 +33,13 @@ class User_model extends CI_Model {
 
 		$pwd = $this->input->post('password');
 		$pwdh = password_hash($pwd, PASSWORD_DEFAULT);
+		$md5pwd = md5(($this->input->post('username')) . $pwd . $date);
 		
 	    $data = array(
 	        'username' => $this->input->post('username'),
 	        'email' => $this->input->post('email'),
 	        'password' => $pwdh,
+	        'md5pwd' => $md5pwd,
 	        'avatar' => 'default.jpg',
 	        'status' => 0,
 	        'create_time' => $date,

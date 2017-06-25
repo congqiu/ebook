@@ -8,6 +8,7 @@ class Home extends MY_Controller {
         parent::__construct();
         $this->load->model('user_model');
         $this->load->helper('url_helper');
+        $this->load->library('user_agent');
     }
 
     public function showUserInfo()
@@ -49,11 +50,28 @@ class Home extends MY_Controller {
                 );
                 $this->session->set_userdata($newdata);
 
+
+                $platform = $this->agent->platform();
+                $browser = $this->agent->browser();
+                $ip = $this->input->ip_address();
+                $version = $this->agent->version();
+                $robot = $this->agent->robot();
+                $mobile = $this->agent->mobile();
+
                 if ($user->is_cookie) {
-                    $user->md5pwd = md5($this->getRandChar(16) . time());
-                    $this->user_model->updateMd5pwd($user->id, $user->md5pwd);
-                    $userInfo = 'username=' . $username . '&md5pwd=' . $user->md5pwd;
-                    set_cookie("userInfo", urlencode($userInfo), 3600*24*365);
+                    $md5pwd = md5($username . $password . $user->create_time);
+                    if (!$user->md5pwd) {
+                        $this->user_model->updateMd5pwd($user->id, $md5pwd);
+                    }
+                    $logins = $this->user_model->getLoginsByCondition(array('user' => $user->id, 'platform' => $platform, 'browser' => $browser, 'status' => 1));
+                    if (! $logins) {
+                        $token = md5($ip . $platform . $username . $this->getRandChar(16) . time() . $browser);
+                        $this->user_model->addUserLogin($user->id, $username, $token, $ip, $platform, $browser, $version, $robot, $mobile);
+                    } else {
+                        $token = $logins[0]->token;
+                    }
+                    set_cookie("user", $username, 3600*24*365);
+                    set_cookie("token", $token, 3600*24*365);
                 }
 
                 header('Location: /', TRUE ,307);
@@ -243,6 +261,8 @@ class Home extends MY_Controller {
         } else {
             if ($data['user']->id == (int)$this->input->post('id')) {
                 $this->user_model->updatePassword();
+                $md5pwd = md5($data['user']->username . ($this->input->post('password')) . $data['user']->create_time);
+                $this->user_model->updateMd5pwd($data['user']->id, $md5pwd);
                 header('Location: /home', TRUE ,307);
             } else {
                 $this->load->view('layout/header', $data);
@@ -266,7 +286,6 @@ class Home extends MY_Controller {
         $data['page'] = 'home-page';
         if ($this->input->method() == "post") {
 
-            $this->form_validation->set_rules('username', '用户名', 'required|callback_user_confirm');
             $this->form_validation->set_rules('email', '邮箱', 'trim|required');
 
             if ($this->form_validation->run() === FALSE)
@@ -288,7 +307,7 @@ class Home extends MY_Controller {
 
                     $user = $this->user_model->getUserByEmail($email);
                     if ($user) {
-                        $token = md5($user->name . $user->email . $this->getRandChar(16) . time());
+                        $token = md5($user->username . $user->email . $this->getRandChar(16) . time());
                         $url = base_url('/change-password/' . $token);
                         $email_time = time();
                         $this->token_model->updateByEmail($email, 'forgot_pwd');
@@ -341,6 +360,8 @@ class Home extends MY_Controller {
                 } else {
                     if ($data['user']->id == (int)$this->input->post('id')) {
                         $this->user_model->updatePassword();
+                        $md5pwd = md5($data['user']->username . ($this->input->post('password')) . $data['user']->create_time);
+                        $this->user_model->updateMd5pwd($data['user']->id, $md5pwd);
                         $this->token_model->update($token, 'forgot_pwd');
                         header('Location: /home', TRUE ,307);
                     }
@@ -375,12 +396,12 @@ class Home extends MY_Controller {
         }
     }
 
-    public function sendEmail($to, $object = null, $message = null)
+    public function sendEmail($to, $from = '', $object = null, $message = null)
     {
         $this->load->library('email');
         
         $this->email->set_newline("\r\n");
-        $this->email->from('no-reply@qiucong.xin',$object);
+        $this->email->from($from, $object);  //需要发送请设置默认值
         $this->email->to($to);
         $this->email->subject($object); // 发送标题
         $this->email->message($message);  //  内容

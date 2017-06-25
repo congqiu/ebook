@@ -13,7 +13,9 @@ application/logs/*
 !application/logs/.htaccess
 
 static/captcha/*
+!static/captcha/.keepgit
 static/avatar/*
+!static/avatar/.keepgit
 
 user_guide/*
 

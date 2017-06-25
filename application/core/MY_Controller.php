@@ -16,22 +16,19 @@ class MY_Controller extends CI_Controller
 			$res = TRUE;
 		}
 
-		if (get_cookie('userInfo')) {
-			$cuser = NULL;
-			$md5pwd = NULL;
-			$userInfo = urldecode(get_cookie('userInfo'));
-			$arr = explode('&', $userInfo);
-			if (explode('=', $arr[0])[0] == 'username') {
-				$username = explode('=', $arr[0])[1];
-				$cuser = $this->user_model->getUserByUserName($username);
-			}
-			if (explode('=', $arr[1])[0] == 'md5pwd') {
-				$md5pwd = explode('=', $arr[1])[1];
-			}
-			if ($cuser && $md5pwd && $cuser->md5pwd == $md5pwd && $cuser->is_cookie) {
-				$res = TRUE;
-			}
+		if (get_cookie('user') && get_cookie('token')) {
+			$this_user = $this->user_model->getUserByUserName(get_cookie('user'));
+			if ($this_user) {
+	           	$login = $this->user_model->getLoginByTokenAndUser($this_user->username, get_cookie('token'));
+	           	$platform = $this->agent->platform();
+        		$browser = $this->agent->browser();
+        		$logined = $login && $platform == $login->platform && $login->browser == $browser;
+		        if ($logined) {
+		            $res = TRUE;
+		        }
+	        }
 		}
+
 		return $res;
 	}
 
@@ -39,22 +36,17 @@ class MY_Controller extends CI_Controller
 	{	
 		$user = NULL;
 
-		if (get_cookie('userInfo')) {
-			$cuser = NULL;
-			$md5pwd = NULL;
-			$userInfo = urldecode(get_cookie('userInfo'));
-			$arr = explode('&', $userInfo);
-			if (explode('=', $arr[0])[0] == 'username') {
-				$username = explode('=', $arr[0])[1];
-				$cuser = $this->user_model->getUserByUserName($username);
-			}
-			if (explode('=', $arr[1])[0] == 'md5pwd') {
-				$md5pwd = explode('=', $arr[1])[1];
-			}
-			if ($cuser && $md5pwd && $cuser->md5pwd == $md5pwd && $cuser->is_cookie) {
-				$res = $cuser;
-				return $cuser;
-			}
+		if (get_cookie('user') && get_cookie('token')) {
+			$this_user = $this->user_model->getUserByUserName(get_cookie('user'));
+			if ($this_user) {
+	           	$login = $this->user_model->getLoginByTokenAndUser($this_user->username, get_cookie('token'));
+	           	$platform = $this->agent->platform();
+        		$browser = $this->agent->browser();
+        		$logined = $login && $platform == $login->platform && $login->browser == $browser;
+		        if ($logined) {
+		            return $this_user;
+		        }
+	        }
 		}
 
 		$username = $this->session->userdata('username');

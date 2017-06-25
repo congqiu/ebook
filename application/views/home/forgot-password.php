@@ -5,7 +5,7 @@
 			<span><?php echo isset($message) ? $message : ""; ?></span>
 			<div class="form-group">
 				<label for="username">用户名</label>
-				<input type="text" name="username" class="form-control" placeholder="用户名" required="">
+				<input type="text" name="username" class="form-control" placeholder="用户名，可不填">
 			</div>
 	        <div class="form-group">
 	            <label for="email">邮箱</label>
