@@ -1,4 +1,4 @@
-<div class="row blogs-board">
+<div class="row bookpage-board">
 	<div class="book-set">
 		<div class="page-set df">
 			<?php if ($isMobile) { ?>
@@ -54,12 +54,12 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="operation">
-					<a href="/book/<?php echo $book; ?>/<?php echo $bookpage->pre; ?>">上一章</a>
+					<a class="pre" href="/book/<?php echo $book; ?>/<?php echo $bookpage->pre; ?>">上一章</a>
 					<a href="/book/<?php echo $book; ?>">回目录</a>
 					<?php if ($bookpage->nex == -2) { ?>
-						<a href="/books/bookcase">回书架</a>
+						<a class="next" href="/books/bookcase">回书架</a>
 					<?php } else { ?>
-						<a href="/book/<?php echo $book; ?>/<?php echo $bookpage->nex; ?>">下一章</a>
+						<a class="next" href="/book/<?php echo $book; ?>/<?php echo $bookpage->nex; ?>">下一章</a>
 					<?php } ?>
 					<a class="add-mark" href="/ajax/add/bookmark/<?php echo $bookpage->id; ?>">加书签</a>
 				</div>
@@ -73,12 +73,12 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="operation">
-					<a href="/book/<?php echo $book; ?>/<?php echo $bookpage->pre; ?>">上一章</a>
+					<a class="pre" href="/book/<?php echo $book; ?>/<?php echo $bookpage->pre; ?>">上一章</a>
 					<a href="/book/<?php echo $book; ?>">回目录</a>
 					<?php if ($bookpage->nex == -2) { ?>
-						<a href="/books/bookcase">回书架</a>
+						<a class="next" href="/books/bookcase">回书架</a>
 					<?php } else { ?>
-						<a href="/book/<?php echo $book; ?>/<?php echo $bookpage->nex; ?>">下一章</a>
+						<a class="next" href="/book/<?php echo $book; ?>/<?php echo $bookpage->nex; ?>">下一章</a>
 					<?php } ?>
 					<a class="add-mark" href="/ajax/add/bookmark/<?php echo $bookpage->id; ?>">加书签</a>
 				</div>
@@ -111,6 +111,16 @@
 			$.get(url, function(data) {
 				addPopup(data);
 			});
+		});
+		$(document).keydown(function(event) {
+			if (event.keyCode === 39) {
+				event.preventDefault();
+				$('.operation .next')[0].click();
+			} else if (event.keyCode === 37) {
+				event.preventDefault();
+				console.log($('.operation .pre'))
+				$('.operation .pre')[0].click();
+			}
 		});
 	});
 	function initPage() {

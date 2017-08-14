@@ -28,7 +28,7 @@ class Books extends MY_Controller {
         $books = $this->books_model->getBooks(8);
         $types = $this->books_model->getBookTypes();
         foreach ($types as $type) {
-            $type_books[$type->id] = $this->books_model->getBooksByCondition(array('type' => $type->id), 10);
+            $type_books[$type->id] = $this->books_model->getBooksByCondition(array('type' => $type->id), 8);
         }
         
 
@@ -160,7 +160,11 @@ class Books extends MY_Controller {
 
         $name = $this->input->post('name');
 
-        $books = $this->books_model->getBooksByName($name, TRUE);
+        if ($name) {
+            $books = $this->books_model->getBooksByName($name, TRUE);
+        } else {
+            $books = $this->books_model->getBooks(8);
+        }
         
         $data = array(
             'page' => 'book-search',

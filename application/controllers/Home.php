@@ -28,7 +28,8 @@ class Home extends MY_Controller {
 
     public function login()
     {
-        $data['title'] = 'login page';
+        $data['meta_title'] = '用户登录';
+        $data['page'] = 'login-page';
 
         if ($this->get_cur_user()) {
             header('Location: /', TRUE ,307);
@@ -76,11 +77,15 @@ class Home extends MY_Controller {
 
                 header('Location: /', TRUE ,307);
             } else {
-                $data['message'] = '失败';
+                $data['message'] = '用户名或密码错误';
+                $this->load->view('layout/header', $data);
                 $this->load->view('home/login', $data);
+                $this->load->view('layout/footer');
             }
         } else {
+            $this->load->view('layout/header', $data);
             $this->load->view('home/login', $data);
+            $this->load->view('layout/footer');
         }
 
     }
@@ -104,6 +109,8 @@ class Home extends MY_Controller {
         $this->load->model('token_model');
 
         $data['title'] = '注册';
+        $data['meta_title'] = '用户注册';
+        $data['page'] = 'register-page';
 
         $this->form_validation->set_rules('username', '用户名', 'trim|required|min_length[1]|max_length[64]|is_unique[user.username])');
         $this->form_validation->set_rules('password', '密码', 'trim|required|min_length[6]');
@@ -115,7 +122,9 @@ class Home extends MY_Controller {
         
         if ($this->form_validation->run() === FALSE)
         {
+            $this->load->view('layout/header', $data);
             $this->load->view('home/register', $data);
+            $this->load->view('layout/footer');
 
         } else {
             $result = $this->user_model->addUser();
@@ -134,7 +143,9 @@ class Home extends MY_Controller {
             } else {
                 $data['message'] = '注册出错了';
             }
+            $this->load->view('layout/header', $data);
             $this->load->view('home/login', $data);
+            $this->load->view('layout/footer');
         }
     }
 

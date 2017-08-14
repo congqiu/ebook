@@ -24,7 +24,7 @@
 							<div class="operation">
 								<a class="remove-bookcase" href="/ajax/remove/bookcase/<?php echo $book->id; ?>">移除</a>
 								<?php if (isset($bookmarks[$index]) && $bookmarks[$index]->id != $latests[$index]->id) {
-									echo "<span style='color:red;'>New</span>";
+									echo "<span class='label label-info'>New</span>";
 								} ?>
 							</div>
 							<!-- <?php echo date('m-d', $latests[$index]->create_time); ?>
@@ -41,11 +41,13 @@
 	jQuery(document).ready(function($) {
 		$('.remove-bookcase').click(function(event) {
 			event.preventDefault();
-			var url = $(this).attr('href') + '/0?' + Math.random();
-			$.get(url, function(data) {
-				addPopup(data);
-			});
-			$(this).parents('.item').remove();
+			if (window.confirm('确定移除该书？')) {
+				var url = $(this).attr('href') + '/0?' + Math.random();
+				$.get(url, function(data) {
+					addPopup(data);
+				});
+				$(this).parents('.item').remove();
+			}
 		});
 	});
 </script>
