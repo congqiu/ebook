@@ -3,10 +3,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class MY_Controller extends CI_Controller
 {
+	public $need_login = false;
+
 	public function __construct($type = NULL)
 	{
 		parent::__construct();
 		$this->load->model('user_model');
+		$this->load->library('session');
+		$this->load->helper('url_helper');
+		$this->check_login();//调用判断登录的方法
+	}
+
+	private function check_login()
+	{
+		if($this->need_login && !$this->is_login())
+		{
+			redirect('/login');
+		}
 	}
 
 	public function is_login()

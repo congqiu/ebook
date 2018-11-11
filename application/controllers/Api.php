@@ -5,6 +5,7 @@ class Api extends MY_Controller {
 
 	public function __construct()
     {
+        $this->need_login = true;
         parent::__construct();
         $this->load->model('books_model');
         $this->load->model('user_model');

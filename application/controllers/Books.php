@@ -5,6 +5,7 @@ class Books extends MY_Controller {
 
 	public function __construct()
     {
+        $this->need_login = true;
         parent::__construct();
         $this->load->model('books_model');
         $this->load->model('user_model');
@@ -25,10 +26,6 @@ class Books extends MY_Controller {
 
     public function index($page = 0)
     {
-
-        if (!$this->is_login()) {
-            redirect('/login');
-        }
         $books = $this->books_model->getBooks(8);
         $types = $this->books_model->getBookTypes();
         foreach ($types as $type) {
