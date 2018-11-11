@@ -111,6 +111,12 @@ class Home extends MY_Controller {
         $data['title'] = '注册';
         $data['meta_title'] = '用户注册';
         $data['page'] = 'register-page';
+        
+        // 关闭注册入口
+        $data['title'] = '仅学习使用，不对外提供注册';
+        $this->load->view('home/register', $data);
+        return;
+
 
         $this->form_validation->set_rules('username', '用户名', 'trim|required|min_length[1]|max_length[64]|is_unique[user.username])');
         $this->form_validation->set_rules('password', '密码', 'trim|required|min_length[6]');
