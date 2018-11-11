@@ -1,5 +1,5 @@
 <div class="auth-form">
-  <form class="form-signin" role="form" action="/register" method="post">
+  <!-- <form class="form-signin" role="form" action="/register" method="post">
     <h2 class="form-signin-heading">用户注册</h2>
     <div class="form-errors"><?php echo validation_errors(); ?></div>
     <div class="form-group">
@@ -16,7 +16,8 @@
     </div>
     
     <button class="btn btn-lg btn-primary btn-block" type="submit">注册</button>
-  </form>
+  </form> -->
+  <div style="text-align: center;">仅学习使用，不对外提供注册</div>
   <div class="change-action">
     已有账号？
     <a href="/login" title="去登录">去登录</a>

@@ -111,10 +111,11 @@ class Home extends MY_Controller {
         $data['title'] = '注册';
         $data['meta_title'] = '用户注册';
         $data['page'] = 'register-page';
-        
+
         // 关闭注册入口
-        $data['title'] = '仅学习使用，不对外提供注册';
+        $this->load->view('layout/header', $data);
         $this->load->view('home/register', $data);
+        $this->load->view('layout/footer');
         return;
 
 
