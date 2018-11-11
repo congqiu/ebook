@@ -11,6 +11,7 @@ class MY_Controller extends CI_Controller
 		$this->load->model('user_model');
 		$this->load->library('session');
 		$this->load->helper('url_helper');
+		$this->load->library('user_agent');
 		$this->check_login();//调用判断登录的方法
 	}
 
@@ -32,8 +33,8 @@ class MY_Controller extends CI_Controller
 		if (get_cookie('user') && get_cookie('token')) {
 			$this_user = $this->user_model->getUserByUserName(get_cookie('user'));
 			if ($this_user) {
-	           	$login = $this->user_model->getLoginByTokenAndUser($this_user->username, get_cookie('token'));
-	           	$platform = $this->agent->platform();
+						$login = $this->user_model->getLoginByTokenAndUser($this_user->username, get_cookie('token'));
+						$platform = $this->agent->platform();
         		$browser = $this->agent->browser();
         		$logined = $login && $platform == $login->platform && $login->browser == $browser;
 		        if ($logined) {
